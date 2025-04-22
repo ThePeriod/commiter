@@ -1,0 +1,23 @@
+name: Random Activity
+on:
+  schedule:
+    - cron: '*/30 8-22 * * *'  # Cada 30 minutos entre 8am y 10pm UTC
+jobs:
+  random-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Run random commit script
+        run: |
+          python commit_random.py
+      - name: Commit changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add README.md
+          git diff --cached --quiet || git commit -m "Commit aleatorio"
+          git push
